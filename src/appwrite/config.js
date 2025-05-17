@@ -1,3 +1,4 @@
+import { configDotenv } from "dotenv";
 import conf from "../conf"
 import { Client, Account, ID, Databases, Storage, Query } from "appwrite"
 
@@ -65,7 +66,64 @@ export class Service{
             return false
         }
     }
-    
+
+    async getPost(slug){
+        try {
+            return await this.databases.getDocument(
+                conf.appwriteDatabaseid,
+                conf.appwriteCollectionid,
+                slug,
+            )
+        } catch (error) {
+            console.log("Appwrite Service :: getPost :: error", error);
+        }
+    }
+
+    async getPosts(queries = [Query.equal("status", "active")]){
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseid,
+                conf.appwriteCollectionid,
+                queries,
+            )
+        } catch (error) {
+            console.log("Appwrite Service :: getPosts :: error");
+            return false 
+        }
+    }
+
+    //file upload services 
+    async uploadFile(file){
+        try {
+            return await this.bucket.createFile(
+                conf.appwriteBucketid,
+                ID.unique(),
+                file
+            )
+        } catch (error) {
+            console.log("Appwrite Services :: uploadFile :: error", error);
+            return false
+        }
+    }
+
+    async deleteFile(fileID){
+        try {
+            return await this.bucket.deleteFile(
+                conf.appwriteBucketid,
+                fileID,
+            )
+        } catch (error) {
+            console.log("Appwrite Service :: deleteFile :: error", error);
+            return false 
+        }
+    }
+
+    getFilePreview(fileID){
+        return this.bucket.getFilePreview(
+            conf.appwriteBucketid,
+            fileID
+        )
+    }
 }
 
 const service = new Service()
