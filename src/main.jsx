@@ -1,16 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import './index.css'
 import { Provider } from 'react-redux'
-import store from "./store/store.js"
+import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Home from './pages/Home.jsx'
-import { Protected, Login } from './components/index.js'
+import { AuthLayout, Login } from './components/index.js'
+
+
 import AddPost from "./pages/AddPost";
-import SignUp from './pages/Signup.jsx'
+import Signup from './pages/Signup'
 import EditPost from "./pages/EditPost";
+
 import Post from "./pages/Post";
+
 import AllPosts from "./pages/AllPosts";
 
 const router = createBrowserRouter([
@@ -25,44 +29,44 @@ const router = createBrowserRouter([
         {
             path: "/login",
             element: (
-                <Protected authentication={false}>
+                <AuthLayout authentication={false}>
                     <Login />
-                </Protected>
+                </AuthLayout>
             ),
         },
         {
             path: "/signup",
             element: (
-                <Protected authentication={false}>
-                    <SignUp />
-                </Protected>
+                <AuthLayout authentication={false}>
+                    <Signup />
+                </AuthLayout>
             ),
         },
         {
             path: "/all-posts",
             element: (
-                <Protected authentication>
+                <AuthLayout authentication>
                     {" "}
                     <AllPosts />
-                </Protected>
+                </AuthLayout>
             ),
         },
         {
             path: "/add-post",
             element: (
-                <Protected authentication>
+                <AuthLayout authentication>
                     {" "}
                     <AddPost />
-                </Protected>
+                </AuthLayout>
             ),
         },
         {
             path: "/edit-post/:slug",
             element: (
-                <Protected authentication>
+                <AuthLayout authentication>
                     {" "}
                     <EditPost />
-                </Protected>
+                </AuthLayout>
             ),
         },
         {
@@ -73,10 +77,10 @@ const router = createBrowserRouter([
 },
 ])
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
     <Provider store={store}>
     <RouterProvider router={router}/>
     </Provider>
-  </StrictMode>,
+  </React.StrictMode>,
 )
