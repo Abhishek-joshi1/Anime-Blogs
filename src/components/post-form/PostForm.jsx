@@ -46,19 +46,23 @@ export default function PostForm({ post }) {
                     navigate(`/post/${dbPost.$id}`);
                 }
             } else {
-                const file = await service.uploadFile(data.image[0]);
-
-                if (file) {
-                    data.featuredImage = file.$id;
-
-                    const dbPost = await service.createPost({
-                        ...data,
-                        userId: userData.$id,
-                    });
-
-                    if (dbPost) {
-                        navigate(`/post/${dbPost.$id}`);
+                let featuredImageId = null;
+                
+                if (data.image[0]) {
+                    const file = await service.uploadFile(data.image[0]);
+                    if (file) {
+                        featuredImageId = file.$id;
                     }
+                }
+
+                const dbPost = await service.createPost({
+                    ...data,
+                    userID: userData.$id,
+                    featuredImage: featuredImageId,
+                });
+
+                if (dbPost) {
+                    navigate(`/post/${dbPost.$id}`);
                 }
             }
         } catch (error) {

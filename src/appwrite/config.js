@@ -5,6 +5,7 @@ export class Service{
     client = new Client();
     databases;
     bucket;
+    storage;
     
     constructor(){
         this.client
@@ -14,7 +15,7 @@ export class Service{
         this.bucket = new Storage(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userId}){
+    async createPost({title, slug, content, featuredImage, status, userID}) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -25,7 +26,7 @@ export class Service{
                     content,
                     featuredImage,
                     status,
-                    userId,
+                    userID, // <-- Corrected here
                 }
             )
         } catch (error) {
@@ -86,8 +87,7 @@ export class Service{
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                queries,
-                s
+                queries
             )
         } catch (error) {
             console.log("Appwrite serive :: getPosts :: error", error);
@@ -125,6 +125,13 @@ export class Service{
 
     getFilePreview(fileId){
         return this.bucket.getFilePreview(
+            conf.appwriteBucketId,
+            `${fileId}`
+        )
+    }
+
+    getFileDownload(fileId){
+        return this.bucket.getFileDownload(
             conf.appwriteBucketId,
             fileId
         )
