@@ -9,7 +9,12 @@ export default function Button({
     ...props
 }) {
     return (
-        <button className={`px-4 py-2 rounded-lg ${bgColor} ${textColor} ${className}`} {...props}>
+        <button
+            type={type}
+            disabled={props.disabled}
+            className={`px-4 py-2 rounded-lg ${bgColor} ${textColor} ${className} ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            {...props}
+        >
             {children}
         </button>
     );
